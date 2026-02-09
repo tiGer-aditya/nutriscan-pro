@@ -1081,24 +1081,47 @@
                         "ean_8_reader",
                         "code_128_reader",
                         "code_39_reader",
+                        "code_39_vin_reader",
+                        "codabar_reader",
                         "upc_reader",
                         "upc_e_reader",
-                        "codabar_reader"
+                        "i2of5_reader"
                     ],
                     debug: {
                         drawBoundingBox: true,
                         showFrequency: false,
                         drawScanline: true,
                         showPattern: false
-                    }
+                    },
+                    multiple: false
                 },
                 locate: true,
                 locator: {
                     halfSample: true,
-                    patchSize: "medium"
+                    patchSize: "medium",
+                    debug: {
+                        showCanvas: false,
+                        showPatches: false,
+                        showFoundPatches: false,
+                        showSkeleton: false,
+                        showLabels: false,
+                        showPatchLabels: false,
+                        showRemainingPatchLabels: false,
+                        boxFromPatches: {
+                            showTransformed: false,
+                            showTransformedBox: false,
+                            showBB: false
+                        }
+                    }
                 },
                 numOfWorkers: navigator.hardwareConcurrency || 4,
-                frequency: 10
+                frequency: 10,
+                area: {
+                    top: "20%",
+                    right: "10%",
+                    left: "10%",
+                    bottom: "20%"
+                }
             }, function(err) {
                 if (err) {
                     console.error('Quagga init error:', err);
@@ -1112,30 +1135,68 @@
                 Quagga.start();
             });
 
-            Quagga.onDetected(function(result) {
-                if (scannerActive && result.codeResult && result.codeResult.code) {
-                    const code = result.codeResult.code;
-                    console.log('Barcode detected:', code);
-                    
-                    barcodeValue.textContent = code;
-                    barcodeResult.classList.remove('hidden');
-                    
-                    // Beep sound (optional)
-                    try {
-                        const beep = new AudioContext();
-                        const oscillator = beep.createOscillator();
-                        oscillator.frequency.value = 800;
-                        oscillator.connect(beep.destination);
-                        oscillator.start();
-                        setTimeout(() => oscillator.stop(), 100);
-                    } catch (e) {
-                        // Audio not supported, ignore
+            // Use processed detection with quality checking
+            let lastDetectedCode = null;
+            let detectionCount = 0;
+            const REQUIRED_DETECTIONS = 3; // Need 3 consistent detections
+
+            Quagga.onProcessed(function(result) {
+                const drawingCtx = Quagga.canvas.ctx.overlay;
+                const drawingCanvas = Quagga.canvas.dom.overlay;
+
+                if (result) {
+                    // Draw detection box
+                    if (result.boxes) {
+                        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute("width")), parseInt(drawingCanvas.getAttribute("height")));
+                        result.boxes.filter(box => box !== result.box).forEach(box => {
+                            Quagga.ImageDebug.drawPath(box, {x: 0, y: 1}, drawingCtx, {color: "green", lineWidth: 2});
+                        });
                     }
-                    
-                    setTimeout(() => {
-                        stopBarcodeScanner();
-                        fetchProductByBarcode(code);
-                    }, 1000);
+
+                    if (result.box) {
+                        Quagga.ImageDebug.drawPath(result.box, {x: 0, y: 1}, drawingCtx, {color: "#00d084", lineWidth: 4});
+                    }
+
+                    if (result.codeResult && result.codeResult.code) {
+                        const code = result.codeResult.code;
+                        
+                        // Check if it's the same code
+                        if (code === lastDetectedCode) {
+                            detectionCount++;
+                        } else {
+                            lastDetectedCode = code;
+                            detectionCount = 1;
+                        }
+
+                        // Only trigger if we have consistent detections
+                        if (scannerActive && detectionCount >= REQUIRED_DETECTIONS) {
+                            console.log('Barcode detected with confidence:', code);
+                            
+                            barcodeValue.textContent = code;
+                            barcodeResult.classList.remove('hidden');
+                            
+                            // Beep sound
+                            try {
+                                const beep = new AudioContext();
+                                const oscillator = beep.createOscillator();
+                                oscillator.frequency.value = 800;
+                                oscillator.connect(beep.destination);
+                                oscillator.start();
+                                setTimeout(() => oscillator.stop(), 100);
+                            } catch (e) {
+                                // Audio not supported, ignore
+                            }
+                            
+                            // Reset detection counters
+                            lastDetectedCode = null;
+                            detectionCount = 0;
+                            
+                            setTimeout(() => {
+                                stopBarcodeScanner();
+                                fetchProductByBarcode(code);
+                            }, 500);
+                        }
+                    }
                 }
             });
         }
