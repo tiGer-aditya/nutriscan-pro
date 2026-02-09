@@ -1,0 +1,413 @@
+# Contributing to NutriScan Pro
+
+First off, thank you for considering contributing to NutriScan Pro! 🎉
+
+It's people like you that make NutriScan Pro such a great tool for helping people make healthier food choices.
+
+## 📋 Table of Contents
+
+- [Code of Conduct](#code-of-conduct)
+- [How Can I Contribute?](#how-can-i-contribute)
+- [Development Setup](#development-setup)
+- [Coding Standards](#coding-standards)
+- [Pull Request Process](#pull-request-process)
+- [Issue Guidelines](#issue-guidelines)
+
+## 📜 Code of Conduct
+
+This project and everyone participating in it is governed by our Code of Conduct. By participating, you are expected to uphold this code. Please report unacceptable behavior to the project maintainers.
+
+### Our Standards
+
+**Examples of behavior that contributes to a positive environment:**
+- Using welcoming and inclusive language
+- Being respectful of differing viewpoints and experiences
+- Gracefully accepting constructive criticism
+- Focusing on what is best for the community
+- Showing empathy towards other community members
+
+**Examples of unacceptable behavior:**
+- Trolling, insulting/derogatory comments, and personal or political attacks
+- Public or private harassment
+- Publishing others' private information without explicit permission
+- Other conduct which could reasonably be considered inappropriate
+
+## 🤝 How Can I Contribute?
+
+### Reporting Bugs
+
+Before creating bug reports, please check the existing issues as you might find that you don't need to create one. When you are creating a bug report, please include as many details as possible:
+
+**Bug Report Template:**
+```markdown
+**Describe the bug**
+A clear and concise description of what the bug is.
+
+**To Reproduce**
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
+
+**Expected behavior**
+What you expected to happen.
+
+**Screenshots**
+If applicable, add screenshots.
+
+**Environment:**
+ - Device: [e.g. iPhone 12, Desktop]
+ - Browser: [e.g. Chrome, Safari]
+ - Version: [e.g. 22]
+
+**Additional context**
+Any other context about the problem.
+```
+
+### Suggesting Enhancements
+
+Enhancement suggestions are tracked as GitHub issues. When creating an enhancement suggestion, please include:
+
+**Feature Request Template:**
+```markdown
+**Is your feature request related to a problem?**
+A clear description of what the problem is.
+
+**Describe the solution you'd like**
+A clear description of what you want to happen.
+
+**Describe alternatives you've considered**
+Any alternative solutions or features you've considered.
+
+**Additional context**
+Any other context or screenshots about the feature request.
+```
+
+### Code Contributions
+
+#### Good First Issues
+
+Look for issues labeled `good first issue` - these are great for newcomers!
+
+#### Priority Contributions
+
+We're especially interested in contributions for:
+- **Ingredient Database Expansion** - Add more harmful ingredients to detect
+- **Multi-language Support** - Translations for UI and ingredient names
+- **Mobile Optimization** - Better responsive design and touch interactions
+- **Performance Improvements** - Faster analysis, smaller bundle size
+- **Accessibility** - Better screen reader support, keyboard navigation
+- **Documentation** - Better guides, tutorials, API docs
+
+## 💻 Development Setup
+
+### Prerequisites
+
+- Modern web browser (Chrome/Firefox/Safari)
+- Text editor (VS Code recommended)
+- Basic understanding of HTML, CSS, JavaScript
+- (Optional) Local web server for testing
+
+### Setup Steps
+
+1. **Fork the repository**
+   ```bash
+   # Click "Fork" on GitHub
+   ```
+
+2. **Clone your fork**
+   ```bash
+   git clone https://github.com/YOUR-USERNAME/nutriscan-pro.git
+   cd nutriscan-pro
+   ```
+
+3. **Create a branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   ```
+
+4. **Start local server (optional)**
+   ```bash
+   # Python 3
+   python -m http.server 8000
+   
+   # Python 2
+   python -m SimpleHTTPServer 8000
+   
+   # Node.js
+   npx http-server
+   ```
+
+5. **Open in browser**
+   ```
+   http://localhost:8000
+   ```
+
+### Project Structure
+
+```
+nutriscan-pro/
+├── index.html              # Main application (all-in-one file)
+├── README.md               # Project documentation
+├── LICENSE                 # MIT License
+├── CONTRIBUTING.md         # This file
+└── .gitignore             # Git ignore rules
+```
+
+### Key Code Sections
+
+**In `index.html`:**
+
+1. **CSS Styles** (lines 1-800)
+   - Custom properties (CSS variables)
+   - Component styles
+   - Responsive design
+
+2. **HTML Structure** (lines 800-1100)
+   - Header and navigation
+   - Tab content sections
+   - Loading and results containers
+
+3. **JavaScript** (lines 1100-end)
+   - `ProductDatabase` class - LocalStorage management
+   - `analyzeImageWithAI()` - AI Vision integration
+   - `performAnalysis()` - Health scoring algorithm
+   - `displayResults()` - Results rendering
+
+## 📐 Coding Standards
+
+### HTML
+
+- Use semantic HTML5 elements
+- Maintain proper indentation (2 spaces)
+- Include ARIA labels for accessibility
+- Keep structure clean and organized
+
+### CSS
+
+- Use CSS custom properties for theming
+- Follow BEM-like naming for classes
+- Mobile-first responsive design
+- Avoid inline styles
+
+### JavaScript
+
+- Use ES6+ features (const/let, arrow functions, async/await)
+- Write clear, self-documenting code
+- Add comments for complex logic
+- Handle errors gracefully
+- Use meaningful variable names
+
+**Example:**
+```javascript
+// Good
+const extractIngredients = async (imageBase64) => {
+  try {
+    const result = await analyzeImageWithAI(imageBase64);
+    return result.ingredients;
+  } catch (error) {
+    console.error('Failed to extract ingredients:', error);
+    throw new Error('Image analysis failed');
+  }
+};
+
+// Avoid
+var x = async (img) => {
+  var r = await doStuff(img);
+  return r.ing;
+};
+```
+
+### Commit Messages
+
+Follow conventional commit format:
+
+```
+type(scope): subject
+
+body (optional)
+
+footer (optional)
+```
+
+**Types:**
+- `feat`: New feature
+- `fix`: Bug fix
+- `docs`: Documentation changes
+- `style`: Code style changes (formatting)
+- `refactor`: Code refactoring
+- `perf`: Performance improvements
+- `test`: Adding tests
+- `chore`: Maintenance tasks
+
+**Examples:**
+```bash
+feat(ai-vision): add support for non-English labels
+fix(barcode): resolve camera permission issue on iOS
+docs(readme): add troubleshooting section
+style(ui): improve mobile responsive design
+```
+
+## 🔄 Pull Request Process
+
+### Before Submitting
+
+- [ ] Test your changes thoroughly
+- [ ] Update documentation if needed
+- [ ] Ensure code follows style guidelines
+- [ ] Add comments for complex code
+- [ ] Test on multiple browsers
+- [ ] Test on mobile devices
+
+### Submitting PR
+
+1. **Update your fork**
+   ```bash
+   git fetch upstream
+   git merge upstream/main
+   ```
+
+2. **Push your changes**
+   ```bash
+   git push origin feature/your-feature-name
+   ```
+
+3. **Create Pull Request**
+   - Go to your fork on GitHub
+   - Click "New Pull Request"
+   - Fill in the PR template
+
+4. **PR Template**
+   ```markdown
+   ## Description
+   Brief description of changes
+   
+   ## Type of Change
+   - [ ] Bug fix
+   - [ ] New feature
+   - [ ] Breaking change
+   - [ ] Documentation update
+   
+   ## Testing
+   Describe how you tested your changes
+   
+   ## Screenshots
+   If applicable
+   
+   ## Checklist
+   - [ ] Code follows style guidelines
+   - [ ] Self-review completed
+   - [ ] Comments added for complex code
+   - [ ] Documentation updated
+   - [ ] No new warnings
+   - [ ] Tested on multiple browsers
+   ```
+
+### Review Process
+
+- Maintainers will review your PR
+- Address any requested changes
+- Once approved, your PR will be merged
+- Your contribution will be credited
+
+## 🐛 Issue Guidelines
+
+### Creating Issues
+
+**Good Issue Title:**
+- ✅ "AI Vision fails with non-English labels"
+- ✅ "Add support for allergen detection"
+- ❌ "Bug"
+- ❌ "Feature request"
+
+**Issue Labels:**
+- `bug` - Something isn't working
+- `enhancement` - New feature or request
+- `documentation` - Documentation improvements
+- `good first issue` - Good for newcomers
+- `help wanted` - Extra attention needed
+- `question` - Further information requested
+
+## 🎨 Design Contributions
+
+### UI/UX Improvements
+
+- Follow the dark theme aesthetic
+- Maintain color consistency
+- Ensure accessibility (WCAG 2.1 AA)
+- Provide mockups for major changes
+
+### Icon and Graphics
+
+- Use emoji or SVG icons
+- Maintain visual consistency
+- Ensure proper sizing on mobile
+
+## 🌍 Translation Contributions
+
+### Adding New Language
+
+1. Create language object in code
+2. Translate all UI strings
+3. Update ingredient database for that language
+4. Test thoroughly
+5. Submit PR with language code (e.g., `es`, `hi`, `fr`)
+
+## 🧪 Testing
+
+### Manual Testing Checklist
+
+- [ ] AI Vision scan with various label images
+- [ ] Barcode scanner with different barcodes
+- [ ] Manual entry with edge cases
+- [ ] Cache functionality
+- [ ] Results display correctly
+- [ ] Charts render properly
+- [ ] Mobile responsive design
+- [ ] Cross-browser compatibility
+
+### Test Cases
+
+**Image Upload:**
+- Clear, high-quality images
+- Blurry or low-quality images
+- Non-food label images
+- Multiple languages
+
+**Analysis:**
+- Products with many harmful ingredients
+- Healthy products
+- Edge cases (missing data)
+
+## 📞 Getting Help
+
+- **GitHub Discussions** - Ask questions, share ideas
+- **GitHub Issues** - Report bugs, request features
+- **Code Review** - Request feedback on your fork
+
+## 🏆 Recognition
+
+Contributors will be:
+- Listed in README acknowledgments
+- Credited in release notes
+- Given contributor badge on GitHub
+
+## 📚 Resources
+
+### Learning Resources
+- [JavaScript ES6+](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [CSS Grid & Flexbox](https://css-tricks.com/)
+- [Web Accessibility](https://www.w3.org/WAI/fundamentals/)
+- [Claude API Docs](https://docs.anthropic.com/)
+
+### Tools
+- [VS Code](https://code.visualstudio.com/)
+- [Chrome DevTools](https://developer.chrome.com/docs/devtools/)
+- [Git Documentation](https://git-scm.com/doc)
+
+## 💖 Thank You!
+
+Your contributions make a real difference in helping people make healthier food choices. Every line of code, every bug report, and every suggestion helps improve NutriScan Pro.
+
+**Happy Contributing! 🎉**
